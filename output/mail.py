@@ -14,6 +14,10 @@ class Mail():
   def __init__(self, conf):
     self.from_addr = conf['from_addr']
     self.to_addr   = conf['mail_addr']
+    if ('subject' in conf):
+      self.subject    = conf['subject']
+    else:
+      self.subject    = None
     if ('smtp' in conf):
       self.smtp    = conf['smtp']
     else:
@@ -53,6 +57,9 @@ class Mail():
     msg = MIMEText(html_body.encode('utf-8'), 'html', 'utf-8')
 
     subject = subject.ljust(30) # title becomes max 30 length
+    if (self.subject):
+      subject = self.subject + " " + subject
+    
     msg['Subject'] = Header(subject, 'utf-8')
     msg['From'] = from_addr
     msg['To'] = to_addr
