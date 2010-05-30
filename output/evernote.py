@@ -48,7 +48,6 @@ class Evernote():
     import mail
     mail_o = mail.Mail(self.conf)
     for url, value in  input_dict.iteritems():
-      print url
       (encoding, contents) = mail_o.create_contents(url)
       if (contents == None):
 	continue # XXX
