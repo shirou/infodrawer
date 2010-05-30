@@ -13,7 +13,6 @@ output:
   mail:
     mail_addr: XXXX@example.com
     from_addr: infodrawer@example.com # if use gmail, replaced to the addr
-    note: ""
     smtp: localhost 
     use_gmail: yes # if yes, smtp will be ignored
     gmail_addr: XXXX@gmail.com
