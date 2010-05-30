@@ -1,0 +1,133 @@
+============
+infodrawer
+============
+:Author: WAKAYAM Shirou <shirou.faw@gmail.com>
+
+
+What' This
+============
+
+
+The infodrawer can acquire information and output.
+
+Currently infodrawer can 
+
+- input
+  - Google Reader Star
+  - Twitter
+  - Twitter Favorites
+
+- output
+  - instapaper
+  - evernote
+  - mail
+
+
+Requirement
+============
+
+- python (2.6 or later)
+- feedparser
+- yaml
+
+
+How to use
+============
+
+1. copy "conf.yaml.sample" to "conf.yaml".
+2. edit conf.yaml
+3. edit your crontab.
+4. enjoy!
+
+How to write config file
+===============================
+
+conf.yaml file should be 'utf-8'.
+
+input
+--------
+
+Google Reader Starred
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+You should make "public" your starred.
+
+|  googlereader:
+|    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+
+Twitter 
+~~~~~~~~~~~~~~~~~~~~
+
+|  twitter:
+|    url: http://twitter.com/statuses/user_timeline/XXXXX.rss
+|    keyword: "メモ"
+
+"keyword" means if this keyword is in your tweet, output it. if "keyword" is not in conf.yaml, all of your tweet will be outputed.
+
+Twitter Favorites
+~~~~~~~~~~~~~~~~~~~~
+
+|  twitterfav:
+|    url: http://twitter.com/favorites/XXXXX.rss
+
+
+output
+--------
+
+Instapaper
+~~~~~~~~~~~~~~~~~~~~
+
+|  instapaper:
+|    username: XXXX@example.com
+|    password: xxXpasswordXxx
+
+mail
+~~~~~~~
+    
+|  mail:
+|    mail_addr: XXXX@example.com
+|    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+|    smtp: localhost 
+|    use_gmail: no # if yes, smtp will be ignored
+|    gmail_addr: XXXX@gmail.com
+|    gmail_pass: xxXgmailpassXxx
+
+Mail address can manage multiple addresses like this.
+
+|    mail_addr: XXXX@example.com, XXXX-2@example.com
+
+If you want to use gmail instead of your SMTP server, change use_gmail
+to "yes" and write down address and password. If use_gmail is "yes", smtp will be ignored and from_addr is replaced to gmail_addr by gmail.com.
+
+Evernote
+~~~~~~~~~~~~~
+
+|  evernote:
+|    mail_addr: XXXX@m.evernote.com
+|    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+|    note: "あとで"
+|    tag: "infodrawer"
+|    smtp: localhost 
+|    use_gmail: yes # if yes, smtp will be ignored
+|    gmail_addr: XXXX@gmail.com
+|    gmail_pass: xxXgmailpassXxx
+
+almost same as mail output.
+
+Currently, "note" and "tag" should be only one.
+
+
+License
+============
+
+new-BSD License
+
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of this Project.
