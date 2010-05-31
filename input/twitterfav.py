@@ -19,7 +19,6 @@ class TwitterFav():
 
     d_str = datetime.now().isoformat()
 
-    input_dict = {}
     for entry in fdp['entries']:
       title = ""
       link = ""
