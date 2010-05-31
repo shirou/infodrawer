@@ -45,6 +45,6 @@ if __name__ == '__main__':
 	output_m = evernote.Evernote(conf['output'][o])
 
       if output_m:
-	print output_m.output(input_dict)
+	output_m.output(input_dict)
 
   hist.append_file() # write to hist_file
