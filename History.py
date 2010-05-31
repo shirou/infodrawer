@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# coding: utf-8
+# -*- coding:utf-8 -*-
 
 import os,yaml
 
@@ -8,9 +8,9 @@ HIST_FILENAME="input_hist.yaml"
 class History():
   def __init__(self):
     '''
-    hist_map ¤Ï¡¢url¤ò¥­¡¼¤È¤·¤Æ¡¢{title,date}¤ò´Ş¤à¼­½ñ¤ò»ı¤Ä¡£
-    date¤Î·Á¼°¤Ï¡¢ISO 8601 (YYYY-MM-DD)¤Ç¡¢
-    entry¤ÎÆüÉÕ¤Ç¤Ï¤Ê¤¯¡¢ÅĞÏ¿¤µ¤ì¤¿ÆüÉÕ
+    hist_map ã¯ã€urlã‚’ã‚­ãƒ¼ã¨ã—ã¦ã€{title,date}ã‚’å«ã‚€è¾æ›¸ã‚’æŒã¤ã€‚
+    dateã®å½¢å¼ã¯ã€ISO 8601 (YYYY-MM-DD)ã§ã€
+    entryã®æ—¥ä»˜ã§ã¯ãªãã€ç™»éŒ²ã•ã‚ŒãŸæ—¥ä»˜
 
     hist_dict = {'http://...': {'title':'...', 'date': '...'},
                 'http://...': {'title':'...', 'date': '...'}, ... }

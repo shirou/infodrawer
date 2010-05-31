@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# coding: utf-8
+# -*- coding:utf-8 -*-
 
 import feedparser
 import urllib
@@ -56,6 +56,6 @@ if __name__ == '__main__':
   conf = yaml.load(open(f).read().decode('utf8'))
   c = conf
 
-  # Fav°ìÍ÷¤ò¼èÆÀ
+  # Favä¸€è¦§ã‚’å–å¾—
   import_m = Twitter(conf['input']['twitter'])
   print import_m.get({})

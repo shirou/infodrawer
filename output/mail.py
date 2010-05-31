@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# coding: utf-8
+# -*- coding:utf-8 -*-
 
 import urllib2
 
@@ -68,7 +68,7 @@ class Mail():
     return msg
 
   def send_mail(self, from_addr, to_addr, msg, smtp = None):
-    # SMTP¤Î°ú¿ô¤ò¾ÊÎ¬¤·¤¿¾ì¹ç¤Ïlocalhost:25
+    # SMTPã®å¼•æ•°ã‚’çœç•¥ã—ãŸå ´åˆã¯localhost:25
     if smtp == None:
       s = smtplib.SMTP()
     else:
