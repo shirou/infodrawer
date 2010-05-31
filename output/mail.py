@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import urllib2
+import urllib
 
 import smtplib
 from email.MIMEText import MIMEText
@@ -18,6 +19,9 @@ class Mail():
       self.subject    = conf['subject']
     else:
       self.subject    = None
+    self.insta = False
+    if ('insta' in conf):
+      self.insta = conf['insta']
     if ('smtp' in conf):
       self.smtp    = conf['smtp']
     else:
@@ -76,7 +80,9 @@ class Mail():
     s.sendmail(from_addr, [to_addr], msg.as_string())
     s.close()
 
-  def create_contents(self, url):
+  def create_contents(self, url, insta=False):
+    if (insta):
+      url = "http://www.instapaper.com/text?u=" + urllib.quote_plus(url)
     req = urllib2.Request(url)
     response = None
     try:
@@ -101,7 +107,13 @@ class Mail():
 
   def output(self, input_dict):
     for url, value in  input_dict.iteritems():
-      (encoding, contents) = self.create_contents(url)
+      contents = ""
+      encoding = ""
+      if ('Twitter' in value['input_from']):
+	encoding = 'utf-8'
+	contents = value['title']
+      else:
+	(encoding, contents) = self.create_contents(url, self.insta)
       if (contents == None):
 	continue # XXX 
       msg = self.create_HTML_message(self.from_addr,
