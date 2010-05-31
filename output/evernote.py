@@ -19,6 +19,9 @@ class Evernote():
       self.smtp    = conf['smtp']
     else:
       self.smtp    = None
+    self.insta = False
+    if ('insta' in conf):
+      self.insta = conf['insta']
     if ('use_gmail' in conf):
       if (conf['use_gmail'] == True):
 	self.use_gmail = True
@@ -52,7 +55,7 @@ class Evernote():
 	encoding = 'utf-8'
 	contents = value['title']
       else:
-	(encoding, contents) = self.create_contents(url, self.insta)
+	(encoding, contents) = mail_o.create_contents(url, self.insta)
 
       if (contents == None):
 	continue # XXX
