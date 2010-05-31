@@ -30,7 +30,6 @@ if __name__ == '__main__':
 
   hist = History.History()
   input_dict = hist.merge(input_dict)
-  hist.append_file() # write to hist_file
 
   if len(input_dict) > 0:
     for o in conf['output']:
@@ -46,4 +45,6 @@ if __name__ == '__main__':
 	output_m = evernote.Evernote(conf['output'][o])
 
       if output_m:
-	print output_m.send(input_dict)
+	print output_m.outpu(input_dict)
+
+  hist.append_file() # write to hist_file

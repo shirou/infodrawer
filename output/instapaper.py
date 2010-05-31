@@ -9,7 +9,7 @@ class InstaPaper():
     self.username = conf['username']
     self.password = conf['password']
 
-  def send(self, input_dict):
+  def output(self, input_dict):
     INSTAPAPER_API_URL = 'https://www.instapaper.com/api/add'
 
     pd = {'username':self.username, 'password':self.password}

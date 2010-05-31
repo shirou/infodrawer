@@ -99,7 +99,7 @@ class Mail():
     s.sendmail(from_addr, [to_addr], msg.as_string())
     s.close()
 
-  def send(self, input_dict):
+  def output(self, input_dict):
     for url, value in  input_dict.iteritems():
       (encoding, contents) = self.create_contents(url)
       if (contents == None):
@@ -132,5 +132,5 @@ if __name__ == '__main__':
   conf = yaml.load(open(f))
 
   output_m = Mail(conf['output']['mail'])
-  output_m.send(hist.get_hist())
+  output_m.output(hist.get_hist())
   

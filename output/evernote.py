@@ -44,7 +44,7 @@ class Evernote():
     else:
       self.tag       = None
 
-  def send(self, input_dict):
+  def outpu(self, input_dict):
     import mail
     mail_o = mail.Mail(self.conf)
     for url, value in  input_dict.iteritems():
@@ -85,5 +85,5 @@ if __name__ == '__main__':
   conf = yaml.load(open(f).read().decode('utf8'))
 
   output_m = Evernote(conf['output']['evernote'])
-  output_m.send(hist.get_hist())
+  output_m.output(hist.get_hist())
   
