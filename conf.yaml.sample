@@ -15,6 +15,7 @@ output:
     mail_addr: XXXX@example.com
     from_addr: infodrawer@example.com # if use gmail, replaced to the addr
     smtp: localhost 
+    insta: yes
     subject: "[あとで]"
     use_gmail: yes # if yes, smtp will be ignored
     gmail_addr: XXXX@gmail.com
@@ -23,6 +24,7 @@ output:
     mail_addr: XXXX@m.evernote.com
     from_addr: infodrawer@example.com # if use gmail, replaced to the addr
     note: "あとで"
+    insta: yes
     tag: "infodrawer"
     smtp: localhost 
     use_gmail: yes # if yes, smtp will be ignored
