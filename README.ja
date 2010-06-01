@@ -1,5 +1,6 @@
 infodrawer
 ============
+:Author: WAKAYAMA Shirou <shirou.faw@gmail.com>
 
 これはなに
 ~~~~~~~~~~~~~~
@@ -37,6 +38,13 @@ infodrawerを定期的に実行する事で、自動的に情報を蓄えるこ�
 3. crontabを編集します
 4. enjoy!
 
+
+注意
+======
+
+- 特にgmailを利用したメール送信処理は重いです。従って、cronの間隔を10分以下にしないでください
+
+
 config fileの書き方
 ===============================
 
@@ -50,18 +58,21 @@ Google Reader Starred
 
 Google Readerのスターをつけたエントリを取得します。
 
+例
+|  googlereader:
+|    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+
 urlは、Google ReaderのスターのRSSを設定してください。
 
 "設定" -> "リーダー設定" -> "フォルダとタグ" -> "スター付きアイテム"です。
 
 スターは"公開"に設定してください。
 
-|  googlereader:
-|    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
 
 Twitter 
 ~~~~~~~~~~~~~~~~~~~~
 
+例
 |  twitter:
 |    url: http://twitter.com/statuses/user_timeline/XXXXX.rss
 |    keyword: "メモ"
@@ -87,20 +98,25 @@ Instapaper
 
 Instapaperに登録します。
 
-instapaperのusernameとpasswordを設定してください。
-
+例
 |  instapaper:
 |    username: XXXX@example.com
 |    password: xxXpasswordXxx
+
+instapaperのusernameとpasswordを設定してください。
+
 
 mail
 ~~~~~~~
 
 メールを送ります。
 
+例:
 |  mail:
 |    mail_addr: XXXX@example.com
 |    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+|    insta: yes
+|    subject: "[Drawer]"
 |    smtp: localhost 
 |    use_gmail: no # if yes, smtp will be ignored
 |    gmail_addr: XXXX@gmail.com
@@ -112,6 +128,12 @@ mail
 
 SMTPサーバではなく、gmailを利用してメールを送りたい場合は、"use_gmail"をyesと変え、gmail_addrとgmail_passを記入してください。もし、"use_gmail"がyesの場合、smtpの設定は無視されます。また、fromアドレスはgmailのアドレスになります。
 
+insta
+  yesの場合、Instpaper.comを利用して送信するHTMLを省略します。
+subject
+  送るメールのsubjectの先頭につける文字列を指定できます。
+
+
 Evernote
 ~~~~~~~~~~~~~
 
@@ -119,6 +141,7 @@ Evernote
 |    mail_addr: XXXX@m.evernote.com
 |    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
 |    note: "あとで"
+|    insta: yes
 |    tag: "infodrawer"
 |    smtp: localhost 
 |    use_gmail: yes # if yes, smtp will be ignored
@@ -127,10 +150,10 @@ Evernote
 
 メールとほぼ同じです。
 
-"note"は、保存するノートを、"tag"は
-
-"tag"は今のところ一つだけしかつけられません。
-
+note
+  保存するノートを指定できます。
+tag
+  つけるタグを指定できます。タグは今のところ一つだけしかつけられません。
 
 License
 ============
@@ -143,7 +166,17 @@ Redistribution and use in source and binary forms, with or without modification,
 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
 
 The views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of this Project.
 
@@ -154,3 +187,12 @@ The views and conclusions contained in the software and documentation are those 
 メールの送信部分は、以下のURLを参考にさせて頂きました。
 ウノウラボのchihiro様に感謝します。
 http://labs.unoh.net/2007/06/python_2.html
+
+
+名前の由来
+===========
+
+
+drawerの意味は引き出しですが、想像しているのはたんすです。
+情報をタンスの肥やしにしてください(笑)
+

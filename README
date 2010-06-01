@@ -1,7 +1,7 @@
 ============
 infodrawer
 ============
-:Author: WAKAYAM Shirou <shirou.faw@gmail.com>
+:Author: WAKAYAMA Shirou <shirou.faw@gmail.com>
 
 
 What' This
@@ -12,15 +12,17 @@ The infodrawer can acquire information and output.
 
 Currently infodrawer can 
 
-- input
+- input from 
   - Google Reader Star
   - Twitter
   - Twitter Favorites
 
-- output
+- output to
   - instapaper
   - evernote
   - mail
+
+You can store any information to run infodrawer periodically.
 
 
 Requirement
@@ -39,6 +41,11 @@ How to use
 3. edit your crontab.
 4. enjoy!
 
+Note
+===============================
+
+- Mail (especially using gmail) is slow. Do not set cron interval under 10 min.
+
 How to write config file
 ===============================
 
@@ -50,26 +57,41 @@ input
 Google Reader Starred
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+Get information from "Stared" entry from your Google Reader.
+
 You should make "public" your starred.
 
+Example
 |  googlereader:
 |    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+
+url
+  RSS feed url of your Stared Google Reader. Can get from "settings" in Google Reader
+
 
 Twitter 
 ~~~~~~~~~~~~~~~~~~~~
 
+
 |  twitter:
 |    url: http://twitter.com/statuses/user_timeline/XXXXX.rss
-|    keyword: "メモ"
+|    keyword: "Memo"
 
-"keyword" means if this keyword is in your tweet, output it. if "keyword" is not in conf.yaml, all of your tweet will be outputed.
+url
+  RSS feed URL of your timeline
+
+"keyword" means if this keyword is in your tweet, output it. if "keyword" is not in conf.yaml, all of your tweet will be output-ed.
 
 Twitter Favorites
 ~~~~~~~~~~~~~~~~~~~~
 
+Get information from your "Favorites" tweet.
+
 |  twitterfav:
 |    url: http://twitter.com/favorites/XXXXX.rss
 
+url
+  RSS feed URL of your favorites.
 
 output
 --------
@@ -77,45 +99,63 @@ output
 Instapaper
 ~~~~~~~~~~~~~~~~~~~~
 
+Register to instapaper.
+
+Example
 |  instapaper:
 |    username: XXXX@example.com
 |    password: xxXpasswordXxx
 
 mail
 ~~~~~~~
-    
+
+Send mail to specified mail address.
+
+Example
 |  mail:
 |    mail_addr: XXXX@example.com
 |    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+|    insta: yes
+|    subject: "[Drawer]"
 |    smtp: localhost 
 |    use_gmail: no # if yes, smtp will be ignored
 |    gmail_addr: XXXX@gmail.com
 |    gmail_pass: xxXgmailpassXxx
 
-Mail address can manage multiple addresses like this.
+Mail address can be set multiple addresses like this.
 
 |    mail_addr: XXXX@example.com, XXXX-2@example.com
 
 If you want to use gmail instead of your SMTP server, change use_gmail
 to "yes" and write down address and password. If use_gmail is "yes", smtp will be ignored and from_addr is replaced to gmail_addr by gmail.com.
 
+insta
+  if yes, use instpaper.com to abbreviate.
+subject
+  Set prefix of mail subject.
+
 Evernote
 ~~~~~~~~~~~~~
 
+Send to evernote via mail.
+
+Example
 |  evernote:
 |    mail_addr: XXXX@m.evernote.com
 |    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
-|    note: "あとで"
+|    note: "Memo"
 |    tag: "infodrawer"
 |    smtp: localhost 
 |    use_gmail: yes # if yes, smtp will be ignored
 |    gmail_addr: XXXX@gmail.com
 |    gmail_pass: xxXgmailpassXxx
 
-almost same as mail output.
+Almost same as mail output.
 
-Currently, "note" and "tag" should be only one.
-
+note
+  set note.
+tag
+  set "tag" of the note. Should be only one, currently.
 
 License
 ============
@@ -128,6 +168,17 @@ Redistribution and use in source and binary forms, with or without modification,
 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
 
 The views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of this Project.
+
