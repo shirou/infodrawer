@@ -47,4 +47,4 @@ if __name__ == '__main__':
       if output_m:
 	output_m.output(input_dict)
 
-  hist.append_file() # write to hist_file
+  hist.append_file(input_dict) # write to hist_file

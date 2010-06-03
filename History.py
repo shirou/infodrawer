@@ -26,10 +26,10 @@ class History():
   def get_hist(self):
     return self.hist_dict
 
-  def append_file(self):
+  def append_file(self, write_dict):
     f = os.path.abspath(os.path.dirname(__file__)) + "/" + HIST_FILENAME
     fp = open(f,"a")
-    output = yaml.dump(self.hist_dict)
+    output = yaml.dump(write_dict)
     fp.write(output)
     fp.close()
 
@@ -41,3 +41,18 @@ class History():
 	return_dict[url] = value
 
     return return_dict
+
+if __name__ == '__main__':
+  import sys,os
+  import yaml
+  
+  import History
+
+  hist = History.History()
+
+  input_dict = {}
+  input_dict['http://twitter.com/SamFURUKAWA/statuses/13878785385'] = 'hoge'
+
+  input_dict = hist.merge(input_dict)
+
+  print input_dict
