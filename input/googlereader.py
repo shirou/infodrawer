@@ -34,7 +34,8 @@ class GoogleReader():
       
       input_dict[link] = {'title':title,
 			  'input_from':'Google Reader',
-			  'input_date': d_str}
+			  'input_date': d_str,
+			  'tag' : ''}
       
     return input_dict
 

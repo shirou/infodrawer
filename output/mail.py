@@ -4,6 +4,8 @@
 import urllib2
 import urllib
 
+import re
+
 import smtplib
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart 
@@ -95,6 +97,32 @@ class Mail():
     msg = response.read()
 
     return self.encoding_detect(msg)
+
+  def removeHTMLHeader(self, body):
+    pass
+
+  def create_contents_rec(self, url, insta=False):
+    p = re.compile('<link rel="next" href="(.+)">')
+    
+    if (insta):
+      url = "http://www.instapaper.com/text?u=" + urllib.quote_plus(url)
+    req = urllib2.Request(url)
+    response = None
+    try:
+      response = urllib2.urlopen(req)
+    except URLError, e:
+      print e.code
+      print e.read()
+      return ""
+
+    msg = response.read()
+
+    m = p.match(msg)
+    if (m):
+      msg = msg + self.removeHTMLHeader(self.create_contents_rec(m.group(1),
+								 insta))
+    else:
+      return self.encoding_detect(msg)
     
   def send_via_gmail(self, from_addr, to_addr, msg, gaddr, password):
     s = smtplib.SMTP('smtp.gmail.com', 587)

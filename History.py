@@ -1,43 +1,74 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import os,yaml
+import os,sqlite3
 
-HIST_FILENAME="input_hist.yaml"
+HIST_FILENAME="input_hist.db"
 
 class History():
   def __init__(self):
-    '''
-    hist_map は、urlをキーとして、{title,date}を含む辞書を持つ。
-    dateの形式は、ISO 8601 (YYYY-MM-DD)で、
-    entryの日付ではなく、登録された日付
+    dbfilename = os.path.abspath(os.path.dirname(__file__)) + "/" + HIST_FILENAME
 
-    hist_dict = {'http://...': {'title':'...', 'date': '...'},
-                'http://...': {'title':'...', 'date': '...'}, ... }
-    
-    '''
-    f = os.path.abspath(os.path.dirname(__file__)) + "/" + HIST_FILENAME
+    if os.path.exists(dbfilename):
+      self.conn = self.openDB(dbfilename)
+    else:
+      self.conn = self.openDB(dbfilename, True)
+      
+  def openDB(self, dbfilename, createFlag = False):
+    conn = sqlite3.connect(dbfilename)
+    if (createFlag):
+      conn.executescript("""CREATE TABLE history(
+                               _id INTEGER PRIMARY KEY,
+                               url TEXT NOT NULL,
+                               title TEXT,
+                               input_date TEXT NOT NULL,
+                               input_from TEXT,
+                               tag TEXT
+                               );""")
+      conn.commit()
+    return conn
 
-    self.hist_dict = {}
-    
-    if os.path.exists(f):
-      self.hist_dict =  yaml.load(open(f))
+  def is_exist(self, url):
+    cur = self.conn.cursor()
+    try:
+      cur.execute("SELECT * From history WHERE url=?", [url])
+      r = cur.fetchone()
+      if (r):
+	return True
+      else:
+	return False
+    finally:
+	cur.close()
 
-  def get_hist(self):
-    return self.hist_dict
-
-  def append_file(self, write_dict):
-    f = os.path.abspath(os.path.dirname(__file__)) + "/" + HIST_FILENAME
-    fp = open(f,"a")
-    output = yaml.dump(write_dict)
-    fp.write(output)
-    fp.close()
+  def insert_hist(self, url, value):
+    cur = self.conn.cursor()
+    try:
+      q = "INSERT INTO history (url, title, input_date, input_from, tag) values(?,?,?,?,?)"
+      cur.execute(q, (url,
+		      value['title'],
+		      value['input_date'],
+		      value['input_from'],
+		      value['tag']))
+      
+      self.conn.commit()
+    finally:
+      cur.close()
 
   def merge(self, input_dict):
+    '''
+    input_dict は、urlをキーとして、{title,input_date}を含む辞書を持つ。
+    input_dateの形式は、ISO 8601 (YYYY-MM-DD)で、
+    entryの日付ではなく、登録された日付
+
+    input_dict = {'http://...': {'title':'...', 'input_date': '...'},
+                  'http://...': {'title':'...', 'input_date': '...'}, ... }
+    
+    '''
+
     return_dict = {}
     for url,value in input_dict.iteritems():
-      if (url not in self.hist_dict):
-	self.hist_dict[url] = value
+      if (self.is_exist(url) == False):
+	self.insert_hist(url, value)
 	return_dict[url] = value
 
     return return_dict
@@ -50,8 +81,11 @@ if __name__ == '__main__':
 
   hist = History.History()
 
+  url = 'http://twitter.com/SamFURUKAWA/statuses/13878785385'
+  print hist.is_exist(url);
+
   input_dict = {}
-  input_dict['http://twitter.com/SamFURUKAWA/statuses/13878785385'] = 'hoge'
+  input_dict[url] = {'title' : """hoge's""", 'input_date': '2010-06-03T23:23:29.897471', 'input_from':'TEST', 'tag':''}
 
   input_dict = hist.merge(input_dict)
 

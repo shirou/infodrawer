@@ -39,10 +39,11 @@ class Twitter():
       if (link in input_dict): # already in the list from other input mod(s).
 	continue
 
-      
       input_dict[link] = {'title':title,
-			  'input_from':'Twitter Favorites',
-			  'input_date': d_str}
+			  'input_from':'Twitter Memo',
+			  'input_date': d_str,
+			  'tag' : ''}
+      
       
     return input_dict
 
