@@ -1,9 +1,8 @@
-infodrawer
-============
+* infodrawer
+
 :Author: WAKAYAMA Shirou <shirou.faw@gmail.com> twitter: r_rudi
 
-これはなに
-~~~~~~~~~~~~~~
+** これはなに
 
 infodrawerは、指定の場所から情報を取得し、指定の場所に送ります。
 
@@ -23,44 +22,41 @@ infodrawerは、指定の場所から情報を取得し、指定の場所に送�
 
 infodrawerを定期的に実行する事で、自動的に情報を蓄えることができます。
 
-必要なもの
-============
+** 必要なもの
 
 - python (2.6 or later)
 - feedparser (RSSパーサー)
 - yaml
 
-使い方
-============
+** 使い方
 
-1. "conf.yaml.sample" に "conf.yaml" コピーします
-2. conf.yamlを編集します
-3. crontabを編集します
-4. enjoy!
+- 1. "conf.yaml.sample" に "conf.yaml" コピーします
+- 2. conf.yamlを編集します
+- 3. crontabを編集します
+- 4. enjoy!
 
 
-注意
-======
+** 注意
+
 
 - 特にgmailを利用したメール送信処理は重いです。従って、cronの間隔を10分以下にしないでください
 
 
-config fileの書き方
-===============================
+** config fileの書き方
 
 conf.yamlはUTF-8でなければ動作しません。
 
-input
---------
+** input
 
-Google Reader Starred
-~~~~~~~~~~~~~~~~~~~~~~~~
+*** input/Google Reader Starred
 
 Google Readerのスターをつけたエントリを取得します。
 
 例
-|  googlereader:
-|    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+>||
+  googlereader:
+    url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+||<
 
 urlは、Google ReaderのスターのRSSを設定してください。
 
@@ -68,63 +64,64 @@ urlは、Google ReaderのスターのRSSを設定してください。
 
 スターは"公開"に設定してください。
 
-
-Twitter 
-~~~~~~~~~~~~~~~~~~~~
+*** input/Twitter 
 
 例
-|  twitter:
-|    url: http://twitter.com/statuses/user_timeline/XXXXX.rss
-|    keyword: "メモ"
+>||
+  twitter:
+    url: http://twitter.com/statuses/user_timeline/XXXXX.rss
+    keyword: "メモ"
+||<
 
 urlは、rssを設定してください。
 
 "keyword"で設定した言葉が含まれているTwitterの呟きを取得します。もし、"keyword"が設定されていなければ、全部の呟きを取得します。
 
-Twitter お気に入り
-~~~~~~~~~~~~~~~~~~~~
+*** input/Twitter お気に入り
 
 urlは、Twitterのお気に入りのRSSを設定してください。
 
-|  twitterfav:
-|    url: http://twitter.com/favorites/XXXXX.rss
+>||
+  twitterfav:
+    url: http://twitter.com/favorites/XXXXX.rss
+||<
 
-
-output
---------
-
-Instapaper
-~~~~~~~~~~~~~~~~~~~~
+*** output/Instapaper
 
 Instapaperに登録します。
 
 例
-|  instapaper:
-|    username: XXXX@example.com
-|    password: xxXpasswordXxx
+>||
+  instapaper:
+    username: XXXX@example.com
+    password: xxXpasswordXxx
+||<
 
 instapaperのusernameとpasswordを設定してください。
 
 
-mail
-~~~~~~~
+*** output/mail
 
 メールを送ります。
 
 例:
-|  mail:
-|    mail_addr: XXXX@example.com
-|    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
-|    insta: yes
-|    subject: "[Drawer]"
-|    smtp: localhost 
-|    use_gmail: no # if yes, smtp will be ignored
-|    gmail_addr: XXXX@gmail.com
-|    gmail_pass: xxXgmailpassXxx
+>||
+  mail:
+    mail_addr: XXXX@example.com
+    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+    insta: yes
+    subject: "[Drawer]"
+    smtp: localhost 
+    use_gmail: no # if yes, smtp will be ignored
+    gmail_addr: XXXX@gmail.com
+    gmail_pass: xxXgmailpassXxx
+||<
 
 送信先メールアドレスは以下のようにして複数の宛先を記入できます。
 
-|    mail_addr: XXXX@example.com, XXXX-2@example.com
+>||
+    mail_addr: XXXX@example.com, XXXX-2@example.com
+||<
 
 SMTPサーバではなく、gmailを利用してメールを送りたい場合は、"use_gmail"をyesと変え、gmail_addrとgmail_passを記入してください。もし、"use_gmail"がyesの場合、smtpの設定は無視されます。また、fromアドレスはgmailのアドレスになります。
 
@@ -134,19 +131,20 @@ subject
   送るメールのsubjectの先頭につける文字列を指定できます。
 
 
-Evernote
-~~~~~~~~~~~~~
+*** output/Evernote
 
-|  evernote:
-|    mail_addr: XXXX@m.evernote.com
-|    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
-|    note: "あとで"
-|    insta: yes
-|    tag: "infodrawer"
-|    smtp: localhost 
-|    use_gmail: yes # if yes, smtp will be ignored
-|    gmail_addr: XXXX@gmail.com
-|    gmail_pass: xxXgmailpassXxx
+>||
+  evernote:
+    mail_addr: XXXX@m.evernote.com
+    from_addr: infodrawer@example.com # if use gmail, replaced to the addr
+    note: "あとで"
+    insta: yes
+    tag: "infodrawer"
+    smtp: localhost 
+    use_gmail: yes # if yes, smtp will be ignored
+    gmail_addr: XXXX@gmail.com
+    gmail_pass: xxXgmailpassXxx
+||<
 
 メールとほぼ同じです。
 
@@ -155,11 +153,9 @@ note
 tag
   つけるタグを指定できます。タグは今のところ一つだけしかつけられません。
 
-License
-============
+** License
 
-new-BSD License
-
+2条項のBSD Licenseです。
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -181,17 +177,14 @@ POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of this Project.
 
 
-謝辞
-============
+** 謝辞
 
 メールの送信部分は、以下のURLを参考にさせて頂きました。
 ウノウラボのchihiro様に感謝します。
 http://labs.unoh.net/2007/06/python_2.html
 
 
-名前の由来
-===========
-
+** 名前の由来
 
 drawerの意味は引き出しですが、想像しているのはたんすです。
 情報をタンスの肥やしにしてください(笑)
