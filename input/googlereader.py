@@ -6,6 +6,30 @@ import urllib
 from datetime import datetime
 
 class GoogleReader():
+  '''
+  GoogleReaderでStarをつけたエントリを取得する。
+
+  config.yamlでは、'url'だけを使用する
+
+  >>> conf = {}
+  >>> conf['url'] = "http://feeds.feedburner.com/blogspot/dtKx"
+  ... # doct testでは違うURLを使用しているが、本来は以下の形式
+  ... # http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
+
+  >>> g = GoogleReader(conf)
+
+  引数に辞書を渡す。内部の形式は History.py に記載
+  この辞書のなかに url があれば、それはすでに他のモジュールが
+  得ている url であるため、ここではなにもしない。
+
+  返り値も同じ形式の辞書となる
+  
+  >>> input_dict = {}
+  >>> result = g.get(input_dict)
+  >>> print len(result)
+  25
+  '''
+  
 
   def __init__(self, conf):
     self.input_url = conf['url']
@@ -40,15 +64,9 @@ class GoogleReader():
     return input_dict
 
 
+def _test():
+  import doctest
+  doctest.testmod()
+
 if __name__ == '__main__':
-  CONF_FILENAME="conf.yaml"
-  import sys,os,yaml
-
-  f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-  conf = yaml.load(open(f))
-  c = conf
-
-  # Star一覧を取得
-  import_m = GoogleReader(conf['input']['googlereader'])
-  print import_m.get({})
-
+  _test()

@@ -6,6 +6,29 @@ import urllib
 from datetime import datetime
 
 class Twitter():
+  '''
+  TwitterのTimeLine中、任意の keyword が含まれているエントリを取り出す
+  
+  config.yamlの形式
+      twitter:
+          url: http://twitter.com/statuses/user_timeline/XXXXX.rss
+          keyword: "メモ"
+
+  >>> conf = {}
+  >>> conf['url'] = "http://twitter.com/statuses/user_timeline/7080152.rss"
+  >>> conf['keyword'] = u"こんにちは"
+
+  >>> t = Twitter(conf)
+
+  引数に辞書を渡す。内部の形式は History.py に記載されている。
+  この辞書のなかに url があれば、それはすでに他のモジュールが
+  得ている url であるため、ここではなにもしない。
+
+  返り値も同じ形式の辞書となる。
+  
+  >>> input_dict = {}
+  >>> result = t.get(input_dict)
+  '''
 
   def __init__(self, conf):
     self.input_url = conf['url']
@@ -13,7 +36,7 @@ class Twitter():
       self.keyword = conf['keyword']
     else:
       self.keyword = None
-    
+
   def get(self, input_dict):
     try:
       fdp = feedparser.parse(self.input_url)
@@ -48,14 +71,9 @@ class Twitter():
     return input_dict
 
 
+def _test():
+  import doctest
+  doctest.testmod()
+
 if __name__ == '__main__':
-  CONF_FILENAME="conf.yaml"
-  import sys,os,yaml
-
-  f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-  conf = yaml.load(open(f).read().decode('utf8'))
-  c = conf
-
-  # Fav一覧を取得
-  import_m = Twitter(conf['input']['twitter'])
-  print import_m.get({})
+  _test()

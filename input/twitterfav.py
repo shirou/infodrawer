@@ -6,6 +6,27 @@ import urllib
 from datetime import datetime
 
 class TwitterFav():
+  '''
+  TwitterのFavoritesを取り出す
+  
+  config.yamlの形式
+      twitterfav:
+          url: http://twitter.com/favorites/XXXXX.rss
+
+  >>> conf = {}
+  >>> conf['url'] = "http://twitter.com/favorites/7080152.rss"
+
+  >>> t = TwitterFav(conf)
+
+  引数に辞書を渡す。内部の形式は History.py に記載されている。
+  この辞書のなかに url があれば、それはすでに他のモジュールが
+  得ている url であるため、ここではなにもしない。
+
+  返り値も同じ形式の辞書となる。
+  
+  >>> input_dict = {}
+  >>> result = t.get(input_dict)
+  '''
 
   def __init__(self, conf):
     self.input_url = conf['url']
@@ -39,15 +60,9 @@ class TwitterFav():
     return input_dict
 
 
+def _test():
+  import doctest
+  doctest.testmod()
+
 if __name__ == '__main__':
-  CONF_FILENAME="conf.yaml"
-  import sys,os,yaml
-
-  f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-  conf = yaml.load(open(f))
-  c = conf
-
-  # Fav一覧を取得
-  import_m = TwitterFav(conf['input']['twitterfav'])
-  print import_m.get({})
-
+  _test()
