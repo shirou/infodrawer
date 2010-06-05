@@ -51,11 +51,14 @@ class Evernote():
     import mail
     mail_o = mail.Mail(self.conf)
     for url, value in  input_dict.iteritems():
+      contents = None
+      encoding = ""
       if ('Twitter' in value['input_from']):
 	encoding = 'utf-8'
 	contents = value['title']
       else:
-	(encoding, contents) = mail_o.create_contents(url, self.insta)
+	encoding = value['encoding']
+	contents = value['contents']
 
       if (contents == None):
 	continue # XXX

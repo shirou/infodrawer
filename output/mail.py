@@ -44,21 +44,6 @@ class Mail():
     else:
       self.use_gmail = False
 
-  def encoding_detect(self, orig_str):
-    try:
-      return ('iso-2022-jp', orig_str.decode('iso-2022-jp'))
-    except UnicodeDecodeError:
-      try:
-	return ('euc-jp', orig_str.decode('euc-jp'))
-      except UnicodeDecodeError:
-	try:
-	  return ('cp932', orig_str.decode('cp932'))
-	except UnicodeDecodeError:
-	  try:
-	    return ('utf-8', orig_str.decode('utf-8'))
-	  except UnicodeDecodeError:
-	    return (None, None)
-
   def create_HTML_message(self, from_addr, to_addr, subject, html_body, encoding):
     msg = MIMEText(html_body.encode('utf-8'), 'html', 'utf-8')
 
@@ -82,48 +67,6 @@ class Mail():
     s.sendmail(from_addr, [to_addr], msg.as_string())
     s.close()
 
-  def create_contents(self, url, insta=False):
-    if (insta):
-      url = "http://www.instapaper.com/text?u=" + urllib.quote_plus(url)
-    req = urllib2.Request(url)
-    response = None
-    try:
-      response = urllib2.urlopen(req)
-    except URLError, e:
-      print e.code
-      print e.read()
-      return ""
-
-    msg = response.read()
-
-    return self.encoding_detect(msg)
-
-  def removeHTMLHeader(self, body):
-    pass
-
-  def create_contents_rec(self, url, insta=False):
-    p = re.compile('<link rel="next" href="(.+)">')
-    
-    if (insta):
-      url = "http://www.instapaper.com/text?u=" + urllib.quote_plus(url)
-    req = urllib2.Request(url)
-    response = None
-    try:
-      response = urllib2.urlopen(req)
-    except URLError, e:
-      print e.code
-      print e.read()
-      return ""
-
-    msg = response.read()
-
-    m = p.match(msg)
-    if (m):
-      msg = msg + self.removeHTMLHeader(self.create_contents_rec(m.group(1),
-								 insta))
-    else:
-      return self.encoding_detect(msg)
-    
   def send_via_gmail(self, from_addr, to_addr, msg, gaddr, password):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.ehlo()
@@ -135,13 +78,14 @@ class Mail():
 
   def output(self, input_dict):
     for url, value in  input_dict.iteritems():
-      contents = ""
+      contents = None
       encoding = ""
       if ('Twitter' in value['input_from']):
 	encoding = 'utf-8'
 	contents = value['title']
       else:
-	(encoding, contents) = self.create_contents(url, self.insta)
+	encoding = value['encoding']
+	contents = value['contents']
       if (contents == None):
 	continue # XXX 
       msg = self.create_HTML_message(self.from_addr,
@@ -171,6 +115,4 @@ if __name__ == '__main__':
   f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
   conf = yaml.load(open(f))
 
-  output_m = Mail(conf['output']['mail'])
-  output_m.output(hist.get_hist())
   

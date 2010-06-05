@@ -4,9 +4,44 @@
 import sys, os
 import yaml
 
+import urllib
+import urllib2
+
 import History
 
 CONF_FILENAME="conf.yaml"
+
+def encoding_detect(orig_str):
+  try:
+    return ('iso-2022-jp', orig_str.decode('iso-2022-jp'))
+  except UnicodeDecodeError:
+    try:
+      return ('euc-jp', orig_str.decode('euc-jp'))
+    except UnicodeDecodeError:
+      try:
+	return ('cp932', orig_str.decode('cp932'))
+      except UnicodeDecodeError:
+	try:
+	  return ('utf-8', orig_str.decode('utf-8'))
+	except UnicodeDecodeError:
+	  return (None, None)
+
+def create_contents(url, value, insta=True):
+  if (insta):
+    url = "http://www.instapaper.com/text?u=" + urllib.quote_plus(url)
+  req = urllib2.Request(url)
+  response = None
+  try:
+    response = urllib2.urlopen(req)
+  except URLError, e:
+    print e.code
+    print e.read()
+    return ""
+
+  msg = response.read()
+  (value['encoding'], value['contents']) = encoding_detect(msg)
+  
+  return value
 
 if __name__ == '__main__':
   f = os.path.abspath(os.path.dirname(__file__)) + "/" + CONF_FILENAME
@@ -30,6 +65,9 @@ if __name__ == '__main__':
 
   hist = History.History()
   input_dict = hist.merge(input_dict)
+
+  for url, value in  input_dict.iteritems():
+    input_dict[url] = create_contents(url, value)
 
   if len(input_dict) > 0:
     for o in conf['output']:
