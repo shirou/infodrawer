@@ -5,7 +5,7 @@ import sys, os
 import yaml
 
 import urllib
-from urllib2 import Request, urlopen, URLError, HTTPError
+import urllib2
 
 import History
 
@@ -33,7 +33,7 @@ def create_contents(url, value, insta=True):
   response = None
   try:
     response = urllib2.urlopen(req)
-  except URLError, e:
+  except urllib2.URLError, e:
     print e.code
     print e.read()
     return ""
