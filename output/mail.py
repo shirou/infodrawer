@@ -55,25 +55,28 @@ class Mail():
 
     return msg
 
-  def send_mail(self, from_addr, to_addr, msg, smtp = None):
-    # SMTPの引数を省略した場合はlocalhost:25
-    if smtp == None:
-      s = smtplib.SMTP()
-    else:
-      s = smtplib.SMTP(smtp)
-    s.sendmail(from_addr, [to_addr], msg.as_string())
-    s.close()
+  def send_mail(self, from_addr, to_addr, msg):
+    self.mail_status.sendmail(from_addr, [to_addr], msg.as_string())
 
-  def send_via_gmail(self, from_addr, to_addr, msg, gaddr, password):
-    s = smtplib.SMTP('smtp.gmail.com', 587)
-    s.ehlo()
-    s.starttls()
-    s.ehlo()
-    s.login(gaddr, password)
-    s.sendmail(from_addr, [to_addr], msg.as_string())
-    s.close()
+  def login(self):
+    if (self.use_gmail):
+      self.mail_status = smtplib.SMTP('smtp.gmail.com', 587)
+      self.mail_status.ehlo()
+      self.mail_status.starttls()
+      self.mail_status.ehlo()
+      self.mail_status.login(self.gmail_addr, self.gmail_pass)
+    else:
+      # SMTPの引数を省略した場合はlocalhost:25
+      if smtp == None:
+	s = smtplib.SMTP()
+      else:
+	s = smtplib.SMTP(self.smtp)
+
+  def logout(self):
+    self.mail_status.close()
 
   def output(self, input_dict):
+    self.login()
     for url, value in  input_dict.iteritems():
       contents = None
       encoding = ""
@@ -90,13 +93,8 @@ class Mail():
 				value['title'],
 				contents,
 				encoding)
-      if (self.use_gmail):
-	self.send_via_gmail(self.from_addr, self.to_addr,
-		       msg, self.gmail_addr, self.gmail_pass)
-      else:
-	self.send_mail(self.from_addr, self.to_addr,
-			    msg, self.smtp)
-
+      self.send_mail(self.from_addr, self.to_addr, msg)
+    self.logout()
 
 if __name__ == '__main__':
   import sys,os

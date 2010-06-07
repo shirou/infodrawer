@@ -48,6 +48,7 @@ class Evernote():
   def output(self, input_dict):
     import mail
     mail_o = mail.Mail(self.conf)
+    mail_o.login()
     for url, value in  input_dict.iteritems():
       contents = None
       encoding = ""
@@ -71,12 +72,8 @@ class Evernote():
 				subject,
 				contents,
 				encoding)
-      if (self.use_gmail):
-	mail_o.send_via_gmail(self.from_addr, self.to_addr,
-			      msg, self.gmail_addr, self.gmail_pass)
-      else:
-	mail_o.send_mail(self.from_addr, self.to_addr,
-			 msg, self.smtp)
+      mail_o.send_mail(self.from_addr, self.to_addr, msg)
+    mail_o.logout()
 
 
 if __name__ == '__main__':
