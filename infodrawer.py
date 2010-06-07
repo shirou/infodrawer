@@ -5,7 +5,7 @@ import sys, os
 import yaml
 
 import urllib
-import urllib2
+from urllib2 import Request, urlopen, URLError, HTTPError
 
 import History
 
