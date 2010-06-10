@@ -1,0 +1,10 @@
+include conf.yaml.sample
+include README
+include README.ja
+include infodrawer.py
+include history.py
+exclude conf.yaml
+exclude input_hist.db
+
+recursive-include input *.py
+recursive-include output *.py
