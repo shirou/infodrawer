@@ -7,7 +7,7 @@ import yaml
 import urllib
 import urllib2
 
-import History
+import history
 
 CONF_FILENAME="conf.yaml"
 
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     if input_m:
       input_dict = input_m.get(input_dict)
 
-  hist = History.History()
+  hist = history.History()
   input_dict = hist.merge(input_dict)
 
   for url, value in  input_dict.iteritems():
