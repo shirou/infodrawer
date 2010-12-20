@@ -76,16 +76,26 @@ class Mail():
     self.mail_status.close()
 
   def output(self, input_dict):
-    self.login()
+    try:
+      self.login()
+    except:
+      print "Mail Login error:", sys.exc_info()[0]
+      raise
     for url, value in  input_dict.iteritems():
       contents = None
       encoding = ""
-      if ('Twitter' in value['input_from']):
+      if (value and value.has_key('input_from')
+	  and 'Twitter' in value['input_from']):
 	encoding = 'utf-8'
 	contents = value['title']
       else:
-	encoding = value['encoding']
-	contents = value['contents']
+	try:
+	  encoding = value['encoding']
+	  contents = value['contents']
+	except TypeError:
+	  print value
+	  print sys.exc_info()[0]
+	  raise
       if (contents == None):
 	continue # XXX 
       msg = self.create_HTML_message(self.from_addr,
@@ -93,7 +103,11 @@ class Mail():
 				value['title'],
 				contents,
 				encoding)
-      self.send_mail(self.from_addr, self.to_addr, msg)
+      try:
+	self.send_mail(self.from_addr, self.to_addr, msg)
+      except:
+	print "Sending Mail Error:", sys.exc_info()[0]
+	raise
     self.logout()
 
 if __name__ == '__main__':

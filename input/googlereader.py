@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 
 import feedparser
-import urllib
 from datetime import datetime
 
 class GoogleReader():

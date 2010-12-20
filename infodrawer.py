@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import sys
 import yaml
 
 import urllib
@@ -34,8 +35,6 @@ def create_contents(url, value, insta=True):
   try:
     response = urllib2.urlopen(req)
   except urllib2.URLError, error:
-    print error.errno
-    print error.message
     return ""
 
   msg = response.read()
@@ -67,7 +66,9 @@ if __name__ == '__main__':
   input_dict = hist.merge(input_dict)
 
   for url, value in  input_dict.iteritems():
-    input_dict[url] = create_contents(url, value)
+    ret = create_contents(url, value)
+    if (len(ret) > 0):
+      input_dict[url] = ret
 
   if len(input_dict) > 0:
     for o in conf['output']:
@@ -83,6 +84,10 @@ if __name__ == '__main__':
         output_m = evernote.Evernote(conf['output'][o])
 
       if output_m:
-        output_m.output(input_dict)
+	try:
+	  output_m.output(input_dict)
+	except:
+	  print "An exception occurs. but continue:" , sys.exc_info()[0]
+	  continue
 
 
