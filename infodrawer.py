@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import sys, os
+import os
+import sys
 import yaml
 
 import urllib
@@ -9,7 +10,7 @@ import urllib2
 
 import history
 
-CONF_FILENAME="conf.yaml"
+CONF_FILENAME = "conf.yaml"
 
 def encoding_detect(orig_str):
   try:
@@ -19,12 +20,12 @@ def encoding_detect(orig_str):
       return ('euc-jp', orig_str.decode('euc-jp'))
     except UnicodeDecodeError:
       try:
-	return ('cp932', orig_str.decode('cp932'))
+        return ('cp932', orig_str.decode('cp932'))
       except UnicodeDecodeError:
-	try:
-	  return ('utf-8', orig_str.decode('utf-8'))
-	except UnicodeDecodeError:
-	  return (None, None)
+        try:
+          return ('utf-8', orig_str.decode('utf-8'))
+        except UnicodeDecodeError:
+          return (None, None)
 
 def create_contents(url, value, insta=True):
   if (insta):
@@ -33,9 +34,7 @@ def create_contents(url, value, insta=True):
   response = None
   try:
     response = urllib2.urlopen(req)
-  except urllib2.URLError, e:
-    print e.code
-    print e.read()
+  except urllib2.URLError, error:
     return ""
 
   msg = response.read()
@@ -67,22 +66,28 @@ if __name__ == '__main__':
   input_dict = hist.merge(input_dict)
 
   for url, value in  input_dict.iteritems():
-    input_dict[url] = create_contents(url, value)
+    ret = create_contents(url, value)
+    if (len(ret) > 0):
+      input_dict[url] = ret
 
   if len(input_dict) > 0:
     for o in conf['output']:
       output_m = None
       if (o == "instapaper"):
-	from output import instapaper
-	output_m = instapaper.InstaPaper(conf['output'][o])
+        from output import instapaper
+        output_m = instapaper.InstaPaper(conf['output'][o])
       elif (o == "mail"):
-	from output import mail
-	output_m = mail.Mail(conf['output'][o])
+        from output import mail
+        output_m = mail.Mail(conf['output'][o])
       elif (o == "evernote"):
-	from output import evernote
-	output_m = evernote.Evernote(conf['output'][o])
+        from output import evernote
+        output_m = evernote.Evernote(conf['output'][o])
 
       if output_m:
-	output_m.output(input_dict)
+	try:
+	  output_m.output(input_dict)
+	except:
+	  print "An exception occurs. but continue:" , sys.exc_info()[0]
+	  continue
 
 

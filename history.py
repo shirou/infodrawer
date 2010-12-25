@@ -1,9 +1,10 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import os,sqlite3
+import os
+import sqlite3
 
-HIST_FILENAME="input_hist.db"
+HIST_FILENAME = "input_hist.db"
 
 class History():
   '''
@@ -38,14 +39,16 @@ class History():
     DBファイルがあればそれを開き、
     無ければ作成のフラグを立ててDBファイルを開く
     '''
-    dbfilename = os.path.abspath(os.path.dirname(__file__)) + "/" + HIST_FILENAME
+    dbfilename = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+			      HIST_FILENAME)
+                                 
 
     if os.path.exists(dbfilename):
-      self.conn = self.open_DB(dbfilename)
+      self.conn = self.open_db(dbfilename)
     else:
-      self.conn = self.open_DB(dbfilename, True)
+      self.conn = self.open_db(dbfilename, True)
       
-  def open_DB(self, dbfilename, create_flag = False):
+  def open_db(self, dbfilename, create_flag = False):
     '''
     DBを開く
     create_flagがTrueであればDBを作成する
@@ -86,13 +89,13 @@ class History():
     cur = self.conn.cursor()
     try:
       cur.execute("SELECT * From history WHERE url=?", [url])
-      r = cur.fetchone()
-      if (r):
-	return True
+      result = cur.fetchone()
+      if (result):
+        return True
       else:
-	return False
+        return False
     finally:
-	cur.close()
+        cur.close()
 
   def insert_hist(self, url, value):
     '''
@@ -111,12 +114,13 @@ class History():
     
     cur = self.conn.cursor()
     try:
-      q = "INSERT INTO history (url, title, input_date, input_from, tag) values(?,?,?,?,?)"
-      cur.execute(q, (url,
-		      value['title'],
-		      value['input_date'],
-		      value['input_from'],
-		      value['tag']))
+      query = """INSERT INTO history (url, title, input_date,
+				      input_from, tag) values(?,?,?,?,?)"""
+      cur.execute(query, (url,
+                          value['title'],
+                          value['input_date'],
+			  value['input_from'],
+			  value['tag']))
       
       self.conn.commit()
     finally:
@@ -139,8 +143,8 @@ class History():
     
     cur = self.conn.cursor()
     try:
-      q = "DELETE FROM history WHERE input_from='TEST'"
-      cur.execute(q)
+      query = "DELETE FROM history WHERE input_from='TEST'"
+      cur.execute(query)
       
       self.conn.commit()
     finally:
@@ -153,10 +157,10 @@ class History():
     '''
 
     return_dict = {}
-    for url,value in input_dict.iteritems():
+    for url, value in input_dict.iteritems():
       if (self.is_exist(url) == False):
-	self.insert_hist(url, value)
-	return_dict[url] = value
+        self.insert_hist(url, value)
+        return_dict[url] = value
 
     return return_dict
 
