@@ -59,11 +59,12 @@ class TwitterFav():
                           'tag' : ''}
       SearchedURL = re.search(pattern, title)
       if SearchedURL:
-          link = SearchedURL.group()
-          input_dict[link] = {'title':title,
-                              'input_from':'Twitter Favorite',
-                              'input_date': d_str,
-                              'tag' : ''}
+          if SearchedURL.group() != "":
+              newlink = SearchedURL.group()
+              input_dict[newlink] = {'title':title,
+                                     'input_from':'Twitter Favorite',
+                                     'input_date': d_str,
+                                     'tag' : ''}
     return input_dict
 
 
