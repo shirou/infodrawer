@@ -64,6 +64,7 @@ class TwitterFav():
               input_dict[newlink] = {'title':title,
                                      'input_from':'Twitter Favorite',
                                      'input_date': d_str,
+                                     'has_url': True,
                                      'tag' : ''}
     return input_dict
 

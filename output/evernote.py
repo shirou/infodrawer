@@ -53,11 +53,14 @@ class Evernote():
       contents = None
       encoding = ""
       if ('Twitter' in value['input_from']):
-	encoding = 'utf-8'
-	contents = value['contents']
+          encoding = 'utf-8'
+          contents = value['title']
+          if value.has_key("has_url"):
+              if value["has_url"]:
+                  contents = value['contens']
       else:
-	encoding = value['encoding']
-	contents = value['contents']
+          encoding = value['encoding']
+          contents = value['contents']
 
       if (contents == None):
 	continue # XXX
