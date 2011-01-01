@@ -61,10 +61,9 @@ class TwitterFav():
       if SearchedURL:
           if SearchedURL.group() != "":
               newlink = SearchedURL.group()
-              input_dict[newlink] = {'title':title,
+              input_dict[newlink] = {'title':newlink,
                                      'input_from':'Twitter Favorite',
                                      'input_date': d_str,
-                                     'has_url': True,
                                      'tag' : ''}
     return input_dict
 
