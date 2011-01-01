@@ -3,7 +3,10 @@
 
 import feedparser
 import urllib
+import re
 from datetime import datetime
+
+pattern = "http://[A-Za-z0-9.?/]+"
 
 class TwitterFav():
   '''
@@ -43,20 +46,24 @@ class TwitterFav():
     for entry in fdp['entries']:
       title = ""
       link = ""
-    
-      if ( "title" in entry ):
-	title = entry.title
-      if ( "link" in entry ):
-	link = entry.link
 
+      if ( "title" in entry ):
+          title = entry.title
+      if ( "link" in entry ):
+          link = entry.link
       if (link in input_dict): # already in the list from other input mod(s).
-	continue
-      
+          continue
       input_dict[link] = {'title':title,
-			  'input_from':'Twitter Favorite',
-			  'input_date': d_str,
-			  'tag' : ''}
-      
+                          'input_from':'Twitter Favorite',
+                          'input_date': d_str,
+                          'tag' : ''}
+      SearchedURL = re.search(pattern, title)
+      if SearchedURL:
+          link = SearchedURL.group()
+          input_dict[link] = {'title':title,
+                              'input_from':'Twitter Favorite',
+                              'input_date': d_str,
+                              'tag' : ''}
     return input_dict
 
 
