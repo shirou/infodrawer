@@ -39,15 +39,12 @@ def create_contents(url, value, insta=True):
 
   msg = response.read()
   (value['encoding'], value['contents']) = encoding_detect(msg)
-  
   return value
 
 if __name__ == '__main__':
   f = os.path.abspath(os.path.dirname(__file__)) + "/" + CONF_FILENAME
   conf = yaml.load(open(f).read().decode('utf8'))
-
   input_dict = {}
-  
   for i in conf['input']:
     input_m = None
     if (i == "googlereader"):
@@ -61,7 +58,6 @@ if __name__ == '__main__':
       input_m = twitterfav.TwitterFav(conf['input'][i])
     if input_m:
       input_dict = input_m.get(input_dict)
-
   hist = history.History()
   input_dict = hist.merge(input_dict)
 
@@ -84,10 +80,10 @@ if __name__ == '__main__':
         output_m = evernote.Evernote(conf['output'][o])
 
       if output_m:
-	try:
-	  output_m.output(input_dict)
-	except:
-	  print "An exception occurs. but continue:" , sys.exc_info()[0]
-	  continue
+          try:
+              output_m.output(input_dict)
+          except:
+              print "An exception occurs. but continue:" , sys.exc_info()[0]
+              continue
 
 
