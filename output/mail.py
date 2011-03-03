@@ -1,8 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import re
-
 import smtplib
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart 
@@ -10,49 +8,51 @@ from email.Header import Header
 from email.Utils import formatdate
 
 class Mail():
-
   def __init__(self, conf):
+    self.input_conf(conf)
+    
+  def input_conf(self, conf):
     self.from_addr = conf['from_addr']
-    self.to_addr   = conf['mail_addr']
-    if ('subject' in conf):
-      self.subject    = conf['subject']
+    self.to_addr = conf['mail_addr']
+    if 'subject' in conf:
+      self.subject = conf['subject']
     else:
-      self.subject    = None
+      self.subject = None
     self.insta = False
-    if ('insta' in conf):
-      self.insta = conf['insta']
-    if ('smtp' in conf):
-      self.smtp    = conf['smtp']
-    else:
-      self.smtp    = None
-    if ('use_gmail' in conf):
-      if (conf['use_gmail'] == True):
-	self.use_gmail = True
+    if 'insta' in conf:
+      if conf['insta'] == 'yes':
+        self.insta = True
       else:
-	self.use_gmail = False
+        self.insta = False
+    if 'smtp' in conf:
+      self.smtp = conf['smtp']
+    else:
+      self.smtp = None
+    if 'use_gmail' in conf:
+      if conf['use_gmail'] == 'yes':
+        self.use_gmail = True
+      else:
+        self.use_gmail = False
     else:
       self.use_gmail = False
-    if ('gmail_addr' in conf):
+    if 'gmail_addr' in conf:
       self.gmail_addr = conf['gmail_addr']
     else:
       self.use_gmail = False
-    if ('gmail_pass' in conf):
+    if 'gmail_pass' in conf:
       self.gmail_pass= conf['gmail_pass']
     else:
       self.use_gmail = False
 
   def create_HTML_message(self, from_addr, to_addr, subject, html_body, encoding):
     msg = MIMEText(html_body.encode('utf-8'), 'html', 'utf-8')
-
     subject = subject.ljust(30) # title becomes max 30 length
-    if (self.subject):
+    if self.subject:
       subject = self.subject + " " + subject
-    
     msg['Subject'] = Header(subject, 'utf-8')
     msg['From'] = from_addr
     msg['To'] = to_addr
     msg['Date'] = formatdate()
-
     return msg
 
   def send_mail(self, from_addr, to_addr, msg):
@@ -67,59 +67,60 @@ class Mail():
       self.mail_status.login(self.gmail_addr, self.gmail_pass)
     else:
       # SMTPの引数を省略した場合はlocalhost:25
-      if smtp == None:
-	s = smtplib.SMTP()
+      if self.smtp == None:
+        s = smtplib.SMTP()
       else:
-	s = smtplib.SMTP(self.smtp)
+        s = smtplib.SMTP(self.smtp)
 
   def logout(self):
     self.mail_status.close()
 
-  def output(self, input_dict):
+  def output(self, input_dict):      
     try:
       self.login()
     except:
       print "Mail Login error:", sys.exc_info()[0]
       raise
+    
     for url, value in  input_dict.iteritems():
       contents = None
       encoding = ""
-      if (value and value.has_key('input_from')
-	  and 'Twitter' in value['input_from']):
-	encoding = 'utf-8'
-	contents = value['title']
+      if value and value.has_key('input_from'):
+        if 'Twitter' in value['input_from']:
+          encoding = 'utf-8'
+          contents = value['title']
       else:
-	try:
-	  encoding = value['encoding']
-	  contents = value['contents']
-	except TypeError:
-	  print value
-	  print sys.exc_info()[0]
-	  raise
-      if (contents == None):
-	continue # XXX 
+        try:
+          encoding = value['encoding']
+          contents = value['contents']
+        except TypeError:
+          print value
+          print sys.exc_info()[0]
+          raise
+      if contents == None:
+        continue # XXX 
       msg = self.create_HTML_message(self.from_addr,
-				self.to_addr,
-				value['title'],
-				contents,
-				encoding)
+                                     self.to_addr,
+                                     value['title'],
+                                     contents,
+                                     encoding)
       try:
-	self.send_mail(self.from_addr, self.to_addr, msg)
+        self.send_mail(self.from_addr, self.to_addr, msg)
       except:
-	print "Sending Mail Error:", sys.exc_info()[0]
-	raise
+        print "Sending Mail Error:", sys.exc_info()[0]
+        raise
+
     self.logout()
 
 if __name__ == '__main__':
   import sys,os
   import yaml
-  
   sys.path.append("..")
-  import History
+  import history
 
   CONF_FILENAME="conf.yaml"
 
-  hist = History.History()
+  hist = history.History()
 
   f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
   conf = yaml.load(open(f))
