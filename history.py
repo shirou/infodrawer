@@ -41,8 +41,7 @@ class History():
     '''
     dbfilename = os.path.join(os.path.abspath(os.path.dirname(__file__)),
 			      HIST_FILENAME)
-                                 
-
+    # DBファイルが存在すれば開き、存在しなければフラグを立てておく
     if os.path.exists(dbfilename):
       self.conn = self.open_db(dbfilename)
     else:
@@ -60,15 +59,15 @@ class History():
     '''
     conn = sqlite3.connect(dbfilename)
     if (create_flag):
-      conn.executescript("""CREATE TABLE history(
-                               _id INTEGER PRIMARY KEY,
-                               url TEXT NOT NULL,
-                               title TEXT,
-                               input_date TEXT NOT NULL,
-                               input_from TEXT,
-                               tag TEXT
-                               );""")
-      conn.commit()
+        conn.executescript("""CREATE TABLE history(
+                                 _id INTEGER PRIMARY KEY,
+                                 url TEXT NOT NULL,
+                                 title TEXT,
+                                 input_date TEXT NOT NULL,
+                                 input_from TEXT,
+                                 tag TEXT
+                                 );""")
+        conn.commit()
     return conn
 
   def is_exist(self, url):
@@ -84,19 +83,18 @@ class History():
     >>> hist.is_exist(url)
     True
     >>> hist.delete_test_data()
-    
     '''
     cur = self.conn.cursor()
     try:
       cur.execute("SELECT * From history WHERE url=?", [url])
       result = cur.fetchone()
-      if (result):
+      if result:
         return True
       else:
         return False
     finally:
-        cur.close()
-
+      cur.close()
+    
   def insert_hist(self, url, value):
     '''
     DBに履歴を入れる
@@ -119,9 +117,8 @@ class History():
       cur.execute(query, (url,
                           value['title'],
                           value['input_date'],
-			  value['input_from'],
-			  value['tag']))
-      
+                          value['input_from'],
+                          value['tag']))
       self.conn.commit()
     finally:
       cur.close()
@@ -140,12 +137,11 @@ class History():
     >>> hist.is_exist(url)
     False
     '''
-    
+  
     cur = self.conn.cursor()
     try:
       query = "DELETE FROM history WHERE input_from='TEST'"
       cur.execute(query)
-      
       self.conn.commit()
     finally:
       cur.close()
@@ -155,13 +151,11 @@ class History():
     引数のinput_dictのうち、履歴DBにないurlをDBに入れる。
     返り値として、履歴DBにないurlのdictを返す。
     '''
-
     return_dict = {}
     for url, value in input_dict.iteritems():
       if (self.is_exist(url) == False):
         self.insert_hist(url, value)
         return_dict[url] = value
-
     return return_dict
 
 def _test():
