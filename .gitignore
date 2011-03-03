@@ -1,0 +1,8 @@
+.DS_Store
+build/
+conf.yaml
+dist/
+*.pyc
+input/*.pyc
+output/*.pyc
+input_hist.db
