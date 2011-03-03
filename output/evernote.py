@@ -10,43 +10,50 @@ from email.Utils import formatdate
 
 class Evernote():
     def __init__(self, conf):
+        self.input_conf(conf)
+        
+    def input_conf(self, conf):
         self.conf = conf
         self.from_addr = conf['from_addr']
-        self.to_addr   = conf['mail_addr']
-        if ('smtp' in conf):
-            self.smtp    = conf['smtp']
+        self.to_addr = conf['mail_addr']
+        if 'smtp' in conf:
+            self.smtp = conf['smtp']
         else:
-            self.smtp    = None
+            self.smtp = None
             self.insta = False
-        if ('insta' in conf):
+        if 'insta' in conf:
             self.insta = conf['insta']
-        if ('use_gmail' in conf):
-            if (conf['use_gmail'] == True):
+        if 'use_gmail' in conf:
+            if conf['use_gmail'] == 'yes':
                 self.use_gmail = True
             else:
                 self.use_gmail = False
         else:
             self.use_gmail = False
-        if ('gmail_addr' in conf):
+        if 'gmail_addr' in conf:
             self.gmail_addr = conf['gmail_addr']
         else:
             self.use_gmail = False
-        if ('gmail_pass' in conf):
+        if 'gmail_pass' in conf:
             self.gmail_pass = conf['gmail_pass']
         else:
             self.use_gmail = False
-        if ('note' in conf):
+        if 'note' in conf:
             self.note = conf['note']
         else:
             self.note = None
-        if ('tag' in conf):
+        if 'tag' in conf:
             self.tag = conf['tag']
         else:
             self.tag = None
-        if ('twitter_account' in conf):
+        if 'twitter_account' in conf:
             self.twitteraccount = conf['twitter_account']
         else:
             self.twitteraccount = None
+        if 'tweetmemo' in conf:
+            self.tweetmemo = conf['tweetmemo']
+        else:
+            self.tweetmemo = None
 
     def output(self, input_dict):
         import mail
@@ -57,26 +64,31 @@ class Evernote():
         for url, value in  input_dict.iteritems():
             contents = None
             encoding = ""
-            if ('Twitter' in value['input_from']):
+            if 'Twitter' in value['input_from']:
                 encoding = 'utf-8'
                 contents = value['title']
                 evernote_note = 'twitter'
-                evernote_tag = 'twitter'
+                if self.tag:
+                    evernote_tag = self.tag
+                else:
+                    evernote_tag = ''
                 if value.has_key("has_url"):
                     if value["has_url"]:
                         contents = value['contents']
-                owntweet = re.match(self.twitteraccount, contents)
-                if owntweet:
-                    contents = contents[re.end() + 2:]
+                if self.twitteraccount:
+                    owntweet = re.match(self.twitteraccount, contents)
+                    if owntweet:
+                        contents = contents[owntweet.end() + 2:]
+                        evernote_note = self.tweetmemo
             else:
                 encoding = value['encoding']
                 contents = value['contents']
-            if (contents == None):
+            if contents == None:
                 continue # XXX
         subject = value['title']
-        if (evernote_note):
+        if evernote_note:
             subject = subject + " @" + evernote_note
-        if (evernote_tag):
+        if evernote_tag:
             subject = subject + " #"+ evernote_tag
         msg = mail_o.create_HTML_message(self.from_addr,
                                          self.to_addr,
@@ -90,9 +102,9 @@ if __name__ == '__main__':
   import sys,os
   import yaml
   sys.path.append("..")
-  import History
+  import history
   CONF_FILENAME="conf.yaml"
-  hist = History.History()
+  hist = history.History()
   f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
   conf = yaml.load(open(f).read().decode('utf8'))
   output_m = Evernote(conf['output']['evernote'])
