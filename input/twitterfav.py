@@ -4,9 +4,10 @@
 import feedparser
 import urllib
 import re
+import sys
 from datetime import datetime
 
-pattern = "http://[A-Za-z0-9.?/]+"
+PATTERN = "http://[A-Za-z0-9.?/]+"
 
 class TwitterFav():
   '''
@@ -30,7 +31,6 @@ class TwitterFav():
   >>> input_dict = {}
   >>> result = t.get(input_dict)
   '''
-
   def __init__(self, conf):
     self.input_url = conf['url']
     
@@ -40,34 +40,31 @@ class TwitterFav():
     except:
       print "(Error) can not get the RSS..."
       sys.exit(1)
-
     d_str = datetime.now().isoformat()
-
     for entry in fdp['entries']:
       title = ""
       link = ""
-
-      if ( "title" in entry ):
+      if "title" in entry:
           title = entry.title
-      if ( "link" in entry ):
+      if "link" in entry:
           link = entry.link
-      if (link in input_dict): # already in the list from other input mod(s).
+      if link in input_dict: # already in the list from other input mod(s).
           continue
       input_dict[link] = {'title':title,
                           'input_from':'Twitter Favorite',
-                          'input_date': d_str,
-                          'tag' : ''}
-      SearchedURL = re.search(pattern, title)
+                          'input_date':d_str,
+                          'has_url':False,
+                          'tag':''}
+      SearchedURL = re.search(PATTERN, title)
       if SearchedURL:
           if SearchedURL.group() != "":
               newlink = SearchedURL.group()
               input_dict[newlink] = {'title':title,
                                      'input_from':'Twitter Favorite',
-                                     'input_date': d_str,
-                                     'has_url': True,
-                                     'tag' : ''}
+                                     'input_date':d_str,
+                                     'has_url':True,
+                                     'tag':''}
     return input_dict
-
 
 def _test():
   import doctest
