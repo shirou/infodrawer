@@ -98,14 +98,29 @@ class Evernote():
         mail_o.send_mail(self.from_addr, self.to_addr, msg)
         mail_o.logout()
 
+def test():
+    import sys,os
+    import yaml
+    sys.path.extend(["..", '.'])
+    import history
+    CONF_FILENAME="conf.yaml"
+    hist = history.History()
+    f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
+    conf = yaml.load(open(f).read().decode('utf8'))
+    output_m = Evernote(conf['output']['evernote'])
+    hist.get_hist = test_get_hist
+    output_m.output(hist.get_hist())
+
+def test_get_hist():
+    test_url = 'http://www.google.com'
+    output_dict = {}
+    output_dict[test_url] = {'title':'my name is yasuharu sawada',
+                             'input_from':'TEST',
+                             'has_url':True,
+                             'contents':'yasu',
+                             'encoding':'utf-8',
+                             'tag':''}
+    return output_dict
+
 if __name__ == '__main__':
-  import sys,os
-  import yaml
-  sys.path.append("..")
-  import history
-  CONF_FILENAME="conf.yaml"
-  hist = history.History()
-  f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-  conf = yaml.load(open(f).read().decode('utf8'))
-  output_m = Evernote(conf['output']['evernote'])
-  output_m.output(hist.get_hist())
+    test()
