@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import smtplib
+import sys
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart 
 from email.Header import Header
@@ -59,7 +60,7 @@ class Mail():
     self.mail_status.sendmail(from_addr, [to_addr], msg.as_string())
 
   def login(self):
-    if (self.use_gmail):
+    if self.use_gmail:
       self.mail_status = smtplib.SMTP('smtp.gmail.com', 587)
       self.mail_status.ehlo()
       self.mail_status.starttls()
@@ -112,17 +113,33 @@ class Mail():
 
     self.logout()
 
-if __name__ == '__main__':
-  import sys,os
-  import yaml
-  sys.path.append("..")
+def test():
+  sys.path.extend(['..', '.'])
   import history
-
-  CONF_FILENAME="conf.yaml"
-
+  test_conf = {'mail_addr':''
+               'from_addr':''
+               'smtp':'localhost',
+               'insta':'no',
+               'subject':'test',
+               'use_gmail':'yes',
+               'gmail_addr':''
+               'gmail_pass':''}
+  output_m = Mail(test_conf)
   hist = history.History()
+  hist.get_hist = test_get_hist
+  output_m.output(hist.get_hist())
 
-  f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-  conf = yaml.load(open(f))
+def test_get_hist():
+  test_url = 'http://www.yahoo.com'
+  output_dict = {}
+  output_dict[test_url] = {'title':'my name is yasuharu sawada',
+                           'input_from':'TEST',
+                           'has_url':True,
+                           'contents':'yasu',
+                           'encoding':'utf-8',
+                           'tag':''}
+  return output_dict
 
+if __name__ == '__main__':
+  test()
   
