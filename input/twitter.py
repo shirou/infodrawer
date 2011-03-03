@@ -3,6 +3,7 @@
 
 import feedparser
 import urllib
+import sys
 from datetime import datetime
 
 class Twitter():
@@ -13,13 +14,12 @@ class Twitter():
       twitter:
           url: http://twitter.com/statuses/user_timeline/XXXXX.rss
           keyword: "メモ"
-
   >>> conf = {}
   >>> conf['url'] = "http://twitter.com/statuses/user_timeline/7080152.rss"
   >>> conf['keyword'] = u"こんにちは"
-
+  
   >>> t = Twitter(conf)
-
+  
   引数に辞書を渡す。内部の形式は History.py に記載されている。
   この辞書のなかに url があれば、それはすでに他のモジュールが
   得ている url であるため、ここではなにもしない。
@@ -29,10 +29,9 @@ class Twitter():
   >>> input_dict = {}
   >>> result = t.get(input_dict)
   '''
-
   def __init__(self, conf):
     self.input_url = conf['url']
-    if ('keyword' in conf):
+    if 'keyword' in conf:
       self.keyword = conf['keyword']
     else:
       self.keyword = None
@@ -43,33 +42,23 @@ class Twitter():
     except:
       print "(Error) can not get the RSS..."
       sys.exit(1)
-
     d_str = datetime.now().isoformat()
-
     for entry in fdp['entries']:
       title = ""
       link = ""
-
-      if ( "title" in entry ):
-	title = entry.title
-
-      if ((self.keyword) and (self.keyword not in title)):
-	continue
-
-      if ( "link" in entry ):
-	link = entry.link
-
-      if (link in input_dict): # already in the list from other input mod(s).
-	continue
-
+      if "title" in entry:
+        title = entry.title
+      if self.keyword and self.keyword not in title:
+        continue
+      if "link" in entry:
+        link = entry.link
+      if link in input_dict: # already in the list from other input mod(s).
+        continue
       input_dict[link] = {'title':title,
-			  'input_from':'Twitter Memo',
-			  'input_date': d_str,
-			  'tag' : ''}
-      
-      
+                          'input_from':'Twitter Memo',
+                          'input_date':d_str,
+                          'tag':''}
     return input_dict
-
 
 def _test():
   import doctest
