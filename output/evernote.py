@@ -1,18 +1,11 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import smtplib
 import re
-from email.MIMEText import MIMEText
-from email.MIMEMultipart import MIMEMultipart
-from email.Header import Header
-from email.Utils import formatdate
+from output import mail
 
 class Evernote():
     def __init__(self, conf):
-        self.input_conf(conf)
-        
-    def input_conf(self, conf):
         self.conf = conf
         self.from_addr = conf['from_addr']
         self.to_addr = conf['mail_addr']
@@ -56,9 +49,6 @@ class Evernote():
             self.tweetmemo = None
 
     def output(self, input_dict):
-        import mail
-        mail_o = mail.Mail(self.conf)
-        mail_o.login()
         evernote_tag = self.tag
         evernote_note = self.note
         for url, value in  input_dict.iteritems():
@@ -85,28 +75,30 @@ class Evernote():
                 contents = value['contents']
             if contents == None:
                 continue # XXX
-        subject = value['title']
-        if evernote_note:
-            subject = subject + " @" + evernote_note
-        if evernote_tag:
-            subject = subject + " #"+ evernote_tag
-        msg = mail_o.create_HTML_message(self.from_addr,
-                                         self.to_addr,
-                                         subject,
-                                         contents,
-                                         encoding)
-        mail_o.send_mail(self.from_addr, self.to_addr, msg)
-        mail_o.logout()
+            subject = value['title']
+            if evernote_note:
+                subject = subject + " @" + evernote_note
+            if evernote_tag:
+                subject = subject + " #"+ evernote_tag
+            mail_o = mail.Mail(self.conf)
+            mail_o.login()
+            msg = mail_o.create_HTML_message(self.from_addr,
+                                             self.to_addr,
+                                             subject,
+                                             contents,
+                                             encoding)
+            mail_o.send_mail(self.from_addr, self.to_addr, msg)
+            mail_o.logout()
 
 def test():
-    import sys,os
+    import sys, os
     import yaml
     sys.path.extend(["..", '.'])
     import history
-    CONF_FILENAME="conf.yaml"
+    conf_filename = "conf.yaml"
     hist = history.History()
-    f = os.path.abspath(os.path.dirname(__file__)) + "/../" + CONF_FILENAME
-    conf = yaml.load(open(f).read().decode('utf8'))
+    fp = os.path.abspath(os.path.dirname(__file__)) + "/../" + conf_filename
+    conf = yaml.load(open(fp).read().decode('utf8'))
     output_m = Evernote(conf['output']['evernote'])
     hist.get_hist = test_get_hist
     output_m.output(hist.get_hist())
