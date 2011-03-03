@@ -3,6 +3,7 @@
 
 import feedparser
 from datetime import datetime
+import sys
 
 class GoogleReader():
   '''
@@ -29,39 +30,30 @@ class GoogleReader():
   25
   '''
   
-
   def __init__(self, conf):
     self.input_url = conf['url']
     
-  
   def get(self, input_dict):
     try:
       fdp = feedparser.parse(self.input_url)
     except:
       print "(Error) can not get the RSS..."
       sys.exit(1)
-
     d_str = datetime.now().isoformat()
-
     for entry in fdp['entries']:
       title = ""
       link = ""
-    
-      if ( "title" in entry ):
-	title = entry.title
-      if ( "link" in entry ):
-	link = entry.link
-
-      if (link in input_dict): # already in the list from other input mod(s).
-	continue
-      
+      if "title" in entry:
+        title = entry.title
+      if "link" in entry:
+        link = entry.link
+      if link in input_dict: # already in the list from other input mod(s).
+        continue
       input_dict[link] = {'title':title,
-			  'input_from':'Google Reader',
-			  'input_date': d_str,
-			  'tag' : ''}
-      
+                          'input_from':'Google Reader',
+                          'input_date':d_str,
+                          'tag':''}
     return input_dict
-
 
 def _test():
   import doctest
