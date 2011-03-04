@@ -5,7 +5,7 @@ import sys
 import yaml
 import urllib
 import urllib2
-from input import googlereader, twitter, twitterfav
+from input import googlereader, twitter, twitterfav, hatenabookmark
 from output import instapaper, mail, evernote
 import history
 
@@ -48,6 +48,8 @@ def inputter(conf, input_dict):
             input_m = twitter.Twitter(conf['input'][i])
         elif i == "twitterfav":
             input_m = twitterfav.TwitterFav(conf['input'][i])
+        elif i == "hatenabookmark":
+            input_m = hatenabookmark.HatenaBookmark(conf['input'][i])
         if input_m:
             input_dict = input_m.get(input_dict)
     return input_dict

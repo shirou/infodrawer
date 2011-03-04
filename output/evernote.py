@@ -54,6 +54,8 @@ class Evernote():
         for url, value in  input_dict.iteritems():
             contents = None
             encoding = ""
+            if 'HatenaBookmark' in value['input_from']:
+                evernote_tag = value.get('tag', evernote_tag)
             if 'Twitter' in value['input_from']:
                 encoding = 'utf-8'
                 contents = value['title']
