@@ -18,7 +18,7 @@ class Mail():
             self.subject = None
             self.insta = False
         if 'insta' in conf:
-            if conf['insta'] == 'yes':
+            if conf['insta']:
                 self.insta = True
             else:
                 self.insta = False
@@ -27,7 +27,7 @@ class Mail():
         else:
             self.smtp = None
         if 'use_gmail' in conf:
-            if conf['use_gmail'] == 'yes':
+            if conf['use_gmail']:
                 self.use_gmail = True
             else:
                 self.use_gmail = False
@@ -54,7 +54,8 @@ class Mail():
         return msg
 
     def send_mail(self, from_addr, to_addr, msg):
-        self.mail_status.sendmail(from_addr, [to_addr], msg.as_string())
+        if (self.mail_status):
+            self.mail_status.sendmail(from_addr, [to_addr], msg.as_string())
 
     def login(self):
         if self.use_gmail:
@@ -71,7 +72,8 @@ class Mail():
         #         s = smtplib.SMTP(self.smtp)
 
     def logout(self):
-        self.mail_status.close()
+        if self.mail_status:
+            self.mail_status.close()
 
     def output(self, input_dict):      
         try:
