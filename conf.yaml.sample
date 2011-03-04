@@ -1,4 +1,4 @@
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 input:
   googlereader:
     url: http://www.google.com/reader/public/atom/user/XXXXX/state/com.google/starred
@@ -7,6 +7,8 @@ input:
   twitter:
     url: http://twitter.com/statuses/user_timeline/XXXXX.rss
     keyword: "メモ"
+  hatenabookmark:
+    url: http://b.hatena.ne.jp/XXXX/rss
 output:
   instapaper:
     username: XXXX@example.com
@@ -14,7 +16,7 @@ output:
   mail:
     mail_addr: XXXX@example.com
     from_addr: infodrawer@example.com # if use gmail, replaced to the addr
-    smtp: localhost 
+    smtp: localhost
     insta: yes
     subject: "[あとで]"
     use_gmail: yes # if yes, smtp will be ignored
@@ -26,8 +28,7 @@ output:
     note: "あとで"
     insta: yes
     tag: "infodrawer"
-    smtp: localhost 
+    smtp: localhost
     use_gmail: yes # if yes, smtp will be ignored
     gmail_addr: XXXX@gmail.com
     gmail_pass: xxXgmailpassXxx
-    
