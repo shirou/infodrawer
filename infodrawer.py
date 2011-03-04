@@ -24,7 +24,7 @@ def encoding_detect(orig_str):
                 try:
                     return ('utf-8', orig_str.decode('utf-8'))
                 except UnicodeDecodeError:
-                    return (None, None)
+                    return ''
 
 def create_contents(url, value, insta=True):
     if insta:
@@ -52,8 +52,8 @@ def inputter(conf, input_dict):
             input_dict = input_m.get(input_dict)
     return input_dict
 
-def outputter(conf, input_dict):
-    if len(input_dict) > 0:
+def outputter(conf, output_dict):
+    if len(output_dict) > 0:
         for out_module in conf['output']:
             output_m = None
             if out_module == "instapaper":
@@ -64,7 +64,7 @@ def outputter(conf, input_dict):
                 output_m = evernote.Evernote(conf['output'][out_module])
             if output_m:
                 try:
-                    output_m.output(input_dict)
+                    output_m.output(output_dict)
                 except:
                     print "An exception occurs. but continue:", \
                           sys.exc_info()[0]
@@ -80,13 +80,13 @@ def main():
     # 重複を除く
     hist = history.History()
     input_dict = hist.merge(input_dict)
-
+    output_dict = {}
     for url, value in input_dict.iteritems():
         ret = create_contents(url, value)
         if len(ret) > 0:
-            input_dict[url] = ret
+            output_dict[url] = ret
     # データを出力
-    outputter(conf, input_dict)
+    outputter(conf, output_dict)
 
 if __name__ == '__main__':
     main()
